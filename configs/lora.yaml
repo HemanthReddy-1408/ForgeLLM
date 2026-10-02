@@ -1,0 +1,11 @@
+# Adapter placement. placement presets: qv | qkvo | attn_mlp | mlp | all_linear  (or list target_modules explicitly)
+lora:
+  method: lora               # lora | dora | bottleneck | ia3 | full
+  rank: 16
+  alpha: 32
+  dropout: 0.05
+  placement: qkvo
+  layers: all                # all | first:N | last:N | a-b
+  rank_pattern: {}           # e.g. {"mlp": 8} -> per-module rank override by path regex
+  rslora: false
+  lora_plus_ratio: 1.0       # >1 trains the B matrices at a higher LR (LoRA+)

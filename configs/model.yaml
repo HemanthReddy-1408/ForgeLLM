@@ -1,0 +1,10 @@
+# Base model. name: a Hugging Face causal LM id, or "tiny" / "tiny:<path>" for the from-scratch TinyGPT.
+model:
+  name: Qwen/Qwen2.5-0.5B-Instruct
+  dtype: bfloat16            # storage/compute dtype of the frozen weights
+  device: auto               # auto -> cuda > mps > cpu
+  quantization: none         # none | nf4 | int8   (nf4 + a LoRA adapter == QLoRA)
+  quant_block_size: 64
+  double_quant: true
+  max_seq_len: 512
+  gradient_checkpointing: true    # recompute activations in backward: ~30% slower, several GB less memory (needed on 16 GB)

@@ -1,0 +1,32 @@
+training:
+  task: sft                  # sft | dpo | ipo | orpo | simpo
+  run_name: sft-run
+  learning_rate: 2.0e-4
+  min_lr_ratio: 0.1
+  scheduler: cosine          # cosine | linear | constant | wsd
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  max_grad_norm: 1.0
+  batch_size: 4
+  gradient_accumulation: 2    # effective batch 8; micro-batch 4 keeps activation memory inside a 16 GB unified-memory Mac
+  epochs: 1
+  max_steps: 0               # >0 overrides epochs
+  amp: none                  # none | bf16 | fp16  (a bf16 base is already half precision; autocast on top measured 2x slower on MPS)
+  eval_every: 50
+  save_every: 100
+  log_every: 5
+  seed: 42
+  # preference optimisation
+  beta: 0.1
+  label_smoothing: 0.0
+  orpo_lambda: 0.1
+  simpo_gamma: 1.0
+
+data:
+  seed: 7
+  min_quality: 0.6
+  near_dup_threshold: 0.85
+  contamination_ngram: 8
+  contamination_threshold: 0.9
+  # replay of general / safety behaviour guards against catastrophic forgetting
+  mixture: {technical_qa: 0.22, reasoning: 0.22, coding: 0.14, extraction: 0.14, tool_use: 0.14, grounded_qa: 0.06, safety: 0.05, general: 0.03}

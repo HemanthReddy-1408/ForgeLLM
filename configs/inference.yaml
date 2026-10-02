@@ -1,0 +1,9 @@
+inference:
+  max_new_tokens: 160
+  temperature: 0.0
+  top_k: 0
+  top_p: 1.0
+  repetition_penalty: 1.0
+  router_threshold: 0.55     # below this the router falls back to the bare base model
+  rag_top_k: 3
+  max_adapters_resident: 4   # adapters kept hot on the shared base; LRU eviction beyond this

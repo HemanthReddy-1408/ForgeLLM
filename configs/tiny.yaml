@@ -1,0 +1,14 @@
+# Override set for the from-scratch TinyGPT (fast, offline): combine as  model.yaml lora.yaml training.yaml tiny.yaml
+model:
+  name: tiny
+  dtype: float32
+  max_seq_len: 640
+lora:
+  rank: 8
+  alpha: 16
+  placement: attn_mlp
+training:
+  learning_rate: 3.0e-3
+  amp: none
+  batch_size: 16
+  gradient_accumulation: 1

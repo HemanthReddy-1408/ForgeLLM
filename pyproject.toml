@@ -1,0 +1,39 @@
+[project]
+name = "forgellm"
+version = "0.1.0"
+description = "ForgeLLM — adaptive LLM training & personalization engine: SFT, LoRA/DoRA/QLoRA/adapters, DPO/ORPO, adapter routing, RAG and tool-use adaptation, built from scratch in PyTorch"
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = ["torch", "transformers", "numpy", "pyyaml", "fastapi", "uvicorn", "pydantic", "httpx"]
+
+[project.optional-dependencies]
+dense = ["sentence-transformers"]
+plot = ["matplotlib"]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+forgellm = "forgellm.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501", "RUF001", "RUF002", "RUF003", "SIM102", "SIM108", "B905", "RUF012", "B008", "E741"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["slow: trains a model for real (tens of seconds)", "hf: needs the cached Qwen2.5-0.5B-Instruct weights"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E702", "E731", "RUF059", "RUF015", "SIM117", "B011", "E701"]
