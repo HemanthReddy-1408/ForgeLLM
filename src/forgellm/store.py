@@ -172,6 +172,26 @@ class Store:
         self._commit()
         return counts
 
+    def sync_adapters(self, root: str | Path | None = None) -> list[str]:
+        """Register adapters that exist on disk but have no registry row (e.g. their rows lived in a store that is
+        currently unreachable). Everything needed is in each adapter's manifest."""
+        import json as _json
+
+        root = Path(root or ARTIFACTS / "adapters")
+        added = []
+        for cfg in sorted(root.glob("*/adapter_config.json")):
+            man = _json.loads(cfg.read_text())
+            name = man.get("name", cfg.parent.name)
+            if self.adapters(name):
+                continue
+            tasks = man.get("tasks") or []
+            self.register_adapter(name, man.get("base_model", "?"), man.get("method", "lora"),
+                                  tasks[0] if tasks else man.get("objective", "unknown"), str(cfg.parent),
+                                  int(man.get("num_parameters", 0)), man.get("data_hash", ""), man.get("config_hash", ""),
+                                  man.get("train_summary", {}))
+            added.append(name)
+        return added
+
     def drop_schema(self) -> None:
         """Postgres only: remove a scratch schema (used by tests)."""
         if self.backend == "postgres" and self.schema != "forgellm":

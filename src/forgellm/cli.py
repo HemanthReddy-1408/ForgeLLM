@@ -136,6 +136,8 @@ def cmd_registry(a: argparse.Namespace) -> None:
     from forgellm.store import get_store
 
     print(f"store: {get_store().describe()}")
+    if a.sync_adapters:
+        print("registered from disk:", get_store().sync_adapters())
     if a.import_sqlite:
         print("imported from SQLite:", get_store().import_sqlite())
     if a.name:
@@ -346,6 +348,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     rg = sub.add_parser("registry", help="show the model registry")
     rg.add_argument("name", nargs="?")
+    rg.add_argument("--sync-adapters", action="store_true", help="register adapters found on disk that have no registry row")
     rg.add_argument("--import-sqlite", action="store_true", help="copy runs/adapters/reports from the local SQLite file into Postgres")
     rg.set_defaults(fn=cmd_registry)
 
